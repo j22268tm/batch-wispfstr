@@ -1,3 +1,5 @@
 venv/
 inputs/*
 transcription_history.db
+config.json
+inputs_processed/*

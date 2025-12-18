@@ -7,9 +7,10 @@ import multiprocessing
 from tqdm import tqdm
 
 # --- 設定エリア ---
-INPUT_DIR = "inputs"
+INPUT_DIR = "inputs_processed"
 TARGET_EXTS = ["*.mp3", "*.wav", "*.m4a", "*.mp4", "*.mov", "*.mkv", "*.flac"]
 MODEL_SIZE = "deepdml/faster-whisper-large-v3-turbo-ct2"
+# MODEL_SIZE = "medium"
 
 DEVICE = "cpu"
 COMPUTE_TYPE = "int8" 
@@ -25,6 +26,21 @@ CPU_THREADS = 0
 
 # DB設定
 DB_NAME = "transcription_history.db"
+
+# --- 設定ファイル読み込み ---
+CONFIG_FILE = "config.json"
+if os.path.exists(CONFIG_FILE):
+    try:
+        import json
+        with open(CONFIG_FILE, "r", encoding="utf-8") as f:
+            config = json.load(f)
+            if "device" in config:
+                DEVICE = config["device"]
+            if "compute_type" in config:
+                COMPUTE_TYPE = config["compute_type"]
+        print(f"Loaded config from {CONFIG_FILE}: Device={DEVICE}, Type={COMPUTE_TYPE}")
+    except Exception as e:
+        print(f"Failed to load {CONFIG_FILE}: {e}")
 # ------------------
 
 def init_db():
